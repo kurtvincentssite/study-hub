@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>StudyHub - Ionic Framework Suite</title>
+  
+  <!-- Ionic Framework Core CSS & JS via CDN (Official Ionic Web Components) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css"/>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+
+  <!-- Custom App CSS -->
+  <link rel="stylesheet" href="css/ionic-app.css">
+</head>
+<body>
+  <ion-app>
+    <!-- Top Brand & Navigation Header -->
+    <header class="custom-header">
+      <div class="brand-row">
+        <div class="brand-badge-group">
+          <div class="brand-avatar">S</div>
+          <div class="brand-title-wrap">
+            <h1>StudyHub</h1>
+            <span class="tech-tag">IONIC • HTML • CSS • JS</span>
+          </div>
+        </div>
+        <button class="header-action-btn" onclick="syncWithAndroid()">
+          <span>🔄</span> Sync Native
+        </button>
+      </div>
+
+      <!-- Segment Chips Bar -->
+      <nav class="nav-segment-bar">
+        <button class="segment-chip active" data-tab="overview">📊 Overview</button>
+        <button class="segment-chip" data-tab="tasks">✅ Tasks</button>
+        <button class="segment-chip" data-tab="subjects">📚 Subjects</button>
+        <button class="segment-chip" data-tab="timer">⏱️ Focus Timer</button>
+        <button class="segment-chip" data-tab="profile">👤 Student ID</button>
+      </nav>
+    </header>
+
+    <ion-content>
+      <!-- TAB 1: OVERVIEW & DASHBOARD -->
+      <main id="tab-overview" class="tab-content-container active">
+        <!-- Hero Student Profile Card -->
+        <section class="hero-card">
+          <div class="hero-top-info">
+            <div class="hero-avatar" id="hero-avatar-initials">AM</div>
+            <div class="hero-details">
+              <h2 id="hero-student-name">Alex Morgan</h2>
+              <p id="hero-degree-text">B.S. Computer Science • 3rd Year</p>
+            </div>
+          </div>
+          <div class="hero-stats-row">
+            <div class="stat-col">
+              <span class="stat-val" id="hero-gpa-val">3.84</span>
+              <span class="stat-lbl">Term GPA</span>
+            </div>
+            <div class="stat-col">
+              <span class="stat-val" id="hero-pending-count">3</span>
+              <span class="stat-lbl">Active Tasks</span>
+            </div>
+            <div class="stat-col">
+              <span class="stat-val" id="hero-subjects-count">4</span>
+              <span class="stat-lbl">Subjects</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Metrics Grid -->
+        <section class="metrics-grid">
+          <div class="metric-card teal">
+            <div class="metric-icon-bubble">🎓</div>
+            <div class="metric-number" id="metric-gpa-number">3.84</div>
+            <div class="metric-caption">Cumulative GPA</div>
+          </div>
+          <div class="metric-card orange">
+            <div class="metric-icon-bubble">⚡</div>
+            <div class="metric-number" id="metric-tasks-number">3</div>
+            <div class="metric-caption">Pending Tasks</div>
+          </div>
+          <div class="metric-card blue">
+            <div class="metric-icon-bubble">📖</div>
+            <div class="metric-number" id="metric-subjects-number">4</div>
+            <div class="metric-caption">Enrolled Courses</div>
+          </div>
+          <div class="metric-card purple">
+            <div class="metric-icon-bubble">⏱️</div>
+            <div class="metric-number">28.5h</div>
+            <div class="metric-caption">Study Hours</div>
+          </div>
+        </section>
+
+        <!-- Quick Tasks Preview -->
+        <section>
+          <div class="section-title-row">
+            <h3>Upcoming Deadlines</h3>
+            <button class="header-action-btn" style="color: #0F766E; background: var(--app-teal-soft); border: none;" onclick="openAddTaskModal()">
+              + New Task
+            </button>
+          </div>
+          <div class="task-card-list" id="overview-task-list">
+            <!-- Dynamically populated or rendered from main tasks -->
+          </div>
+        </section>
+      </main>
+
+      <!-- TAB 2: TASKS & ASSIGNMENTS -->
+      <main id="tab-tasks" class="tab-content-container">
+        <div class="section-title-row">
+          <h3>Task Management</h3>
+          <button class="btn-primary-action" onclick="openAddTaskModal()">
+            + Add New Task
+          </button>
+        </div>
+        <p style="font-size: 13px; color: var(--app-text-secondary); margin-bottom: 14px;">
+          Tap any task to toggle completion. Changes sync directly to the Android ViewModel.
+        </p>
+        <div class="task-card-list" id="tasks-list-container">
+          <!-- Populated by JS -->
+        </div>
+      </main>
+
+      <!-- TAB 3: SUBJECTS -->
+      <main id="tab-subjects" class="tab-content-container">
+        <div class="section-title-row">
+          <h3>Current Enrolled Subjects</h3>
+        </div>
+        <div class="subjects-grid" id="subjects-grid-container">
+          <!-- Populated by JS -->
+        </div>
+      </main>
+
+      <!-- TAB 4: FOCUS POMODORO TIMER -->
+      <main id="tab-timer" class="tab-content-container">
+        <div class="timer-container">
+          <h3 style="margin-bottom: 4px; font-size: 20px;">Focus Study Session</h3>
+          <p style="color: var(--app-text-secondary); font-size: 13px; margin-bottom: 20px;">
+            Structured interval timer to boost academic productivity.
+          </p>
+
+          <div class="timer-ring-wrapper">
+            <svg class="timer-svg" viewBox="0 0 200 200">
+              <circle class="timer-circle-bg" cx="100" cy="100" r="90" />
+              <circle class="timer-circle-progress" id="timer-progress-circle" cx="100" cy="100" r="90" />
+            </svg>
+            <div class="timer-display-inner">
+              <div class="timer-digits" id="timer-digits-text">25:00</div>
+              <div class="timer-mode-lbl" id="timer-mode-label">Study Focus</div>
+            </div>
+          </div>
+
+          <div class="timer-controls-row">
+            <button class="btn-primary-action" id="timer-start-btn">Start Focus</button>
+            <button class="btn-secondary-action" id="timer-reset-btn">Reset</button>
+          </div>
+
+          <div class="timer-preset-pills">
+            <button class="preset-pill active" data-mode="focus" data-mins="25">25m Pomodoro</button>
+            <button class="preset-pill" data-mode="break" data-mins="5">5m Short Break</button>
+            <button class="preset-pill" data-mode="long-break" data-mins="15">15m Long Break</button>
+          </div>
+        </div>
+      </main>
+
+      <!-- TAB 5: STUDENT PROFILE -->
+      <main id="tab-profile" class="tab-content-container">
+        <div class="section-title-row">
+          <h3>Student ID & Academic Record</h3>
+          <button class="btn-secondary-action" onclick="openEditProfileModal()">
+            ✏️ Edit Info
+          </button>
+        </div>
+
+        <div class="profile-card-full">
+          <div class="profile-field-group">
+            <div class="profile-field-label">Student Full Name</div>
+            <div class="profile-field-value" id="prof-val-name">Alex Morgan</div>
+          </div>
+          <div class="profile-field-group">
+            <div class="profile-field-label">Institutional Email</div>
+            <div class="profile-field-value" id="prof-val-email">alex.morgan@university.edu</div>
+          </div>
+          <div class="profile-field-group">
+            <div class="profile-field-label">Student ID Number</div>
+            <div class="profile-field-value" id="prof-val-id">STU-2026-8891</div>
+          </div>
+          <div class="profile-field-group">
+            <div class="profile-field-label">Degree & Major</div>
+            <div class="profile-field-value" id="prof-val-degree">B.S. Computer Science</div>
+          </div>
+          <div class="profile-field-group">
+            <div class="profile-field-label">Academic Standing</div>
+            <div class="profile-field-value" id="prof-val-semester">3rd Year • 1st Semester</div>
+          </div>
+        </div>
+      </main>
+    </ion-content>
+  </ion-app>
+
+  <!-- MODAL: ADD TASK -->
+  <div class="modal-overlay" id="modal-add-task">
+    <div class="modal-box">
+      <h4 class="modal-title">Create New Task</h4>
+      <form id="form-add-task" onsubmit="submitNewTask(event)">
+        <div class="form-group">
+          <label>Task Title</label>
+          <input type="text" id="input-task-title" class="form-control" placeholder="e.g. Complete Lab Report #4" required>
+        </div>
+        <div class="form-group">
+          <label>Subject Course</label>
+          <select id="modal-task-subject" class="form-control">
+            <!-- options inserted by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Due Date / Time</label>
+          <input type="text" id="input-task-due" class="form-control" placeholder="e.g. Tomorrow, 5:00 PM">
+        </div>
+        <div class="form-group">
+          <label>Priority</label>
+          <select id="input-task-priority" class="form-control">
+            <option value="High">High Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="Low">Low Priority</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary-action" onclick="closeAddTaskModal()">Cancel</button>
+          <button type="submit" class="btn-primary-action">Add Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT ACADEMIC PROFILE -->
+  <div class="modal-overlay" id="modal-edit-profile">
+    <div class="modal-box">
+      <h4 class="modal-title">Edit Academic Info</h4>
+      <form id="form-edit-profile" onsubmit="submitProfileEdit(event)">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="edit-prof-name" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>University Email</label>
+          <input type="email" id="edit-prof-email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Student ID</label>
+          <input type="text" id="edit-prof-id" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Degree Program</label>
+          <input type="text" id="edit-prof-degree" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Year & Semester</label>
+          <input type="text" id="edit-prof-semester" class="form-control" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary-action" onclick="closeEditProfileModal()">Cancel</button>
+          <button type="submit" class="btn-primary-action">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST BANNER -->
+  <div class="toast-notice" id="toast-banner">Notification</div>
+
+  <!-- Ionic JavaScript Logic -->
+  <script src="js/ionic-app.js"></script>
+</body>
+</html>
